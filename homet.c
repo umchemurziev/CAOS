@@ -1,23 +1,13 @@
+#include <sys/stat.h>
 #include <stdio.h>
-#include <time.h>
-#include <inttypes.h>
+#include <stdlib.h>
 
-enum { HD = 24, SH = 3600, DS = HD * SH };
-
-int main() {
-    int32_t inp;
-    while(scanf("%" SCNd32, &inp) == 1) {
-        int32_t sc;
-        time_t res;
-        time_t curtime = time(NULL);
-        if (__builtin_add_overflow(sc, curtime, &res) || __builtin_mul_overflow(DS, inp, &sc)) {
-            printf("OVERFLOW\n");
-        }
-        else {
-            char data[228];
-            struct tm *Time = localtime(&res);
-            strftime(data, sizeof(data), "%Y-%m-%d", Time);
-            printf("%s\n", data);
-        }
+int main(int argc, char * argv[]) {
+    long long sum = 0;
+    struct stat name;
+    for (int i = 0; i < argc - 1; ++i) {
+        int id = lstat(argv[i + 1], &name);
+        if (id > 0 || S_ISREG(name.st_mode) || !S_ISLNK(name.st_mode) || name.st_nlink == 1) sum += name.st_size;
     }
+    printf("%llu\n", sum);
 }
