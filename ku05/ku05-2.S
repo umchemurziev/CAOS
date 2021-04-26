@@ -5,38 +5,37 @@ process:
         push    %ebp
         mov     %esp, %ebp
 
+        push    %ebx
         push    %esi
         push    %edi
-        push    %ebx
+
 
         mov     20(%esp), %eax
         mov     (%eax), %ebx
         mov     4(%eax), %ecx
-        mov     12(%eax), %esi
-        mov     8(%eax), %eax
+        mov     8(%eax), %esi
+        mov     12(%eax), %edi
 
-        imul    %ebx
+        mov     %edi, %eax
+        imul    %ecx
         mov     %eax, %edi
         mov     %esi, %eax
         mov     %edx, %esi
 
-        imul    %ecx
+        imul    %ebx
         add     %edi, %eax
         adc     %esi, %edx
         jo      over
-        
-        pop     %ebx
-        pop     %edi
-        pop     %esi
-        pop     %ebp
-        ret
+
+        jmp     end
 
 over:
-        pop     %ebx
-        pop     %edi
-        pop     %esi
         mov     $0, %eax
         mov     $0, %edx
 
+end:
+        pop     %edi
+        pop     %esi
+        pop     %ebx
         pop     %ebp
         ret
